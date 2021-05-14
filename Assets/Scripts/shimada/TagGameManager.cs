@@ -13,6 +13,7 @@ public class TagGameManager : MonoBehaviour
     [SerializeField] Text m_console = null;
     /// <summary>ゲームが始まっているかを管理するフラグ</summary>
     bool m_isGameStarted = false;
+    [SerializeField] int m_startPlayerCount = 1;
 
     void Start()
     {
@@ -23,7 +24,7 @@ public class TagGameManager : MonoBehaviour
     {
         // 入室していて、まだゲームが始まっていない状態で、人数が揃った時
         if (PhotonNetwork.InRoom && !m_isGameStarted
-            && PhotonNetwork.CurrentRoom.MaxPlayers == PhotonNetwork.CurrentRoom.PlayerCount)
+            && PhotonNetwork.CurrentRoom.PlayerCount >= m_startPlayerCount)
         {
             // ゲームを開始する
             m_console.text = "Game Start!";

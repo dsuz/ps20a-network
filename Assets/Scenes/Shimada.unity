@@ -1815,6 +1815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_console: {fileID: 1032753778}
+  m_startPlayerCount: 1
 --- !u!1001 &7319150589844443274
 PrefabInstance:
   m_ObjectHideFlags: 0
