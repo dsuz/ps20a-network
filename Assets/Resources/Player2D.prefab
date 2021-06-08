@@ -75,6 +75,7 @@ MonoBehaviour:
   m_dashPower: 50
   m_dashPeriod: 3
   m_gracePeriod: 1.5
+  _tagMark: {fileID: 776943415217747487}
 --- !u!58 &2070144204475347736
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -276,6 +277,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61d091c2589e52840987fa9c8c3492f1, type: 3}
+--- !u!1 &776943415217747487 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8625098909780132676, guid: 61d091c2589e52840987fa9c8c3492f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 9041750487659722075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &776943415217747485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8625098909780132678, guid: 61d091c2589e52840987fa9c8c3492f1,

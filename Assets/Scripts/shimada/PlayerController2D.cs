@@ -25,9 +25,9 @@ public class PlayerController2D : MonoBehaviour
 
     Rigidbody2D m_rb = null;
     PhotonView m_view = null;
-    SpriteRenderer m_sprite = null;
+    //SpriteRenderer m_sprite = null;
 
-    GameObject _tagMark = null;
+    [SerializeField] GameObject _tagMark = null;
 
     /// <summary>ダッシュの間隔を計るためのタイマー</summary>
     float m_dashTimer = 0f;
@@ -39,8 +39,8 @@ public class PlayerController2D : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_view = GetComponent<PhotonView>();
         m_dashTimer = m_dashPeriod;
-        m_sprite = GetComponent<SpriteRenderer>();
-        _tagMark = transform.Find("TagMark").gameObject;
+        //m_sprite = GetComponent<SpriteRenderer>();
+        //_tagMark = this.transform.Find("TagMark").gameObject;
         _tagMark.SetActive(false);
     }
 
