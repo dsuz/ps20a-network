@@ -47,7 +47,8 @@ public class TagGameManager : MonoBehaviour
         if (!m_isGameStarted)
         {
             m_console.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {m_maxPlayerCount}"; //部屋の最大人数と現在の人数を表示
-                                                                                              // 入室していて、まだゲームが始まっていない状態で、人数が揃った時
+
+            // 入室していて、まだゲームが始まっていない状態で、人数が揃った時
             if (PhotonNetwork.CurrentRoom.PlayerCount >= m_startPlayerCount && PhotonNetwork.IsMasterClient)
             {
                 m_startButton.gameObject.SetActive(true);//STARTボタンを有効にする
