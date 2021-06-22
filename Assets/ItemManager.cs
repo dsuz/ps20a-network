@@ -6,9 +6,11 @@ public class ItemManager : MonoBehaviour
 {
     bool IsEnd = true;
     [SerializeField]
-    float m_correctSpeed =1.5f;
+    public float m_correctSpeed =1.5f;
     [SerializeField]
-    float m_powerTime = 5f;
+    public float m_powerTime = 5f;
+    [SerializeField]
+    GameObject m_item = null;
     PlayerController2DKasai m_player;
     // Start is called before the first frame update
     void Start()
@@ -24,15 +26,7 @@ public class ItemManager : MonoBehaviour
 
     public float SetCorrectionNum()
     {
-        StartCoroutine(SetTimer());
-        if (!IsEnd)
-        {
-            return m_correctSpeed;
-        }
-        else
-        {
-            return 1f;
-        }
+        return m_correctSpeed;
     }
 
     IEnumerator SetTimer()
@@ -42,5 +36,14 @@ public class ItemManager : MonoBehaviour
         IsEnd = true;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!m_item) return;
 
+        if (collision.CompareTag("Player"))
+        {
+            Debug.Log("Hit");
+            m_item.SetActive(false);
+        }
+    }
 }

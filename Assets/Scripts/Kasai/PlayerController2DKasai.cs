@@ -36,6 +36,10 @@ public class PlayerController2DKasai : MonoBehaviour
     float m_dashTimer = 0f;
     /// <summary>猶予期間を計るためのタイマー</summary>
     float m_graceTimer = 0f;
+    /// <summary>補正期間を計るためのタイマー</summary>
+    float m_powerTimer;
+
+    ItemManager itemManager;
 
     void Start()
     {
@@ -53,7 +57,6 @@ public class PlayerController2DKasai : MonoBehaviour
 
         Move();
         Rotate();
-        Debug.Log(m_correctSpeed);
         // ダッシュの処理
         if (m_dashTimer < m_dashPeriod)
         {
@@ -70,6 +73,17 @@ public class PlayerController2DKasai : MonoBehaviour
         if (m_graceTimer < m_gracePeriod)
         {
             m_graceTimer += Time.deltaTime;
+        }
+
+        if (m_powerTimer > 0)
+        {
+            m_correctSpeed = itemManager.SetCorrectionNum();
+            Debug.Log(itemManager.SetCorrectionNum());
+            m_powerTimer -= Time.deltaTime;
+        }
+        else
+        {
+            m_correctSpeed = 1;
         }
     }
 
@@ -96,7 +110,9 @@ public class PlayerController2DKasai : MonoBehaviour
     {
         if (collision.tag == "Item")
         {
-           m_correctSpeed = collision.GetComponent<ItemManager>().SetCorrectionNum();
+           itemManager = collision.GetComponent<ItemManager>();
+            m_powerTimer = itemManager.m_powerTime;
+            Debug.Log(itemManager);
         }
     }
 
