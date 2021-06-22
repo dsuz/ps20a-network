@@ -19,6 +19,8 @@ public class TagGameManager : MonoBehaviour
     [SerializeField] int m_maxPlayerCount = 4;
     [SerializeField] int m_startPlayerCount = 1;
     [SerializeField] Button m_startButton = null;
+    PhotonView[] m_view = null;
+    PlayerController2D[] m_players;
 
     Event m_eventState;
 
@@ -46,12 +48,19 @@ public class TagGameManager : MonoBehaviour
 
         if (!m_isGameStarted)
         {
-            m_console.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {m_maxPlayerCount}"; //部屋の最大人数と現在の人数を表示
+            int playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+            m_console.text = $"{playerCount} / {m_maxPlayerCount}"; //部屋の最大人数と現在の人数を表示
 
             // 入室していて、まだゲームが始まっていない状態で、人数が揃った時
-            if (PhotonNetwork.CurrentRoom.PlayerCount >= m_startPlayerCount && PhotonNetwork.IsMasterClient)
+            if (playerCount >= m_startPlayerCount && PhotonNetwork.IsMasterClient)
             {
+                m_players = GameObject.FindObjectsOfType<PlayerController2D>();
                 m_startButton.gameObject.SetActive(true);//STARTボタンを有効にする
+                m_view = new PhotonView[PhotonNetwork.CurrentRoom.PlayerCount];
+                //for (int i = 0; i < playerCount; i++)
+                //{
+                //    m_view[i] = m_players[i].GetComponent<PhotonView>(); 
+                //}
             }
         }
     }
@@ -71,12 +80,15 @@ public class TagGameManager : MonoBehaviour
         m_console.text = "Game Start!";
         Invoke("ClearConsole", 1.5f);   // 1.5秒後に表示を消す
         m_isGameStarted = true; // ゲーム開始フラグを立てる
+        //TimeManager.Instance.StartTimer();
+        PhotonView view1 = this.GetComponent<PhotonView>();
+        view1.RPC("StartTimer", RpcTarget.All);
 
         // マスタークライアントにより、ランダムに鬼を決める
         if (PhotonNetwork.IsMasterClient)
         {
-            PlayerController2D[] players = GameObject.FindObjectsOfType<PlayerController2D>();
-            PhotonView view = players[Random.Range(0, players.Length)].GetComponent<PhotonView>();
+            //PlayerController2D[] players = GameObject.FindObjectsOfType<PlayerController2D>();
+            PhotonView view = m_players[Random.Range(0, m_players.Length)].GetComponent<PhotonView>();
             view.RPC("Tag", RpcTarget.All);
         }
     }
