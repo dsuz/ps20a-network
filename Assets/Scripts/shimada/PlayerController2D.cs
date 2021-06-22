@@ -16,16 +16,19 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField] float m_dashPower = 50f;
     /// <summary>一度ダッシュした後、次にダッシュできるまでの秒数</summary>
     [SerializeField] float m_dashPeriod = 3f;
-    /// <summary>鬼の時の色</summary>
-    [SerializeField] Color m_taggedColor = Color.red;
-    /// <summary>鬼ではない時の色</summary>
-    [SerializeField] Color m_normalColor = Color.white;
+    ///// <summary>鬼の時の色</summary>
+    //[SerializeField] Color m_taggedColor = Color.red;
+    ///// <summary>鬼ではない時の色</summary>
+    //[SerializeField] Color m_normalColor = Color.white;
     /// <summary>鬼を移された直後、鬼を移せない猶予期間（秒）</summary>
     [SerializeField] float m_gracePeriod = 1.5f;
 
     Rigidbody2D m_rb = null;
     PhotonView m_view = null;
-    SpriteRenderer m_sprite = null;
+    //SpriteRenderer m_sprite = null;
+
+    [SerializeField] GameObject _tagMark = null;
+
     /// <summary>ダッシュの間隔を計るためのタイマー</summary>
     float m_dashTimer = 0f;
     /// <summary>猶予期間を計るためのタイマー</summary>
@@ -36,8 +39,9 @@ public class PlayerController2D : MonoBehaviour
         m_rb = GetComponent<Rigidbody2D>();
         m_view = GetComponent<PhotonView>();
         m_dashTimer = m_dashPeriod;
-        m_sprite = GetComponent<SpriteRenderer>();
-        m_sprite.color = m_normalColor;
+        //m_sprite = GetComponent<SpriteRenderer>();
+        //_tagMark = this.transform.Find("TagMark").gameObject;
+        _tagMark.SetActive(false);
     }
 
     void Update()
@@ -69,7 +73,7 @@ public class PlayerController2D : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 自分が生成したオブジェクトが鬼であり、かつ猶予期間でなく衝突相手がプレイヤーである時
-        if (m_view && m_view.IsMine && m_sprite.color.Equals(m_taggedColor)
+        if (m_view && m_view.IsMine && _tagMark.activeSelf
             && m_graceTimer >= m_gracePeriod && collision.gameObject.CompareTag("Player"))
         {
             // 衝突相手を鬼にする
@@ -123,7 +127,9 @@ public class PlayerController2D : MonoBehaviour
     [PunRPC]
     public void Tag()
     {
-        ChangeColor(m_taggedColor.r, m_taggedColor.g, m_taggedColor.b, m_taggedColor.a);
+        _tagMark.SetActive(true);
+        m_graceTimer = 0f;
+        //ChangeColor(m_taggedColor.r, m_taggedColor.g, m_taggedColor.b, m_taggedColor.a);
     }
 
     /// <summary>
@@ -132,7 +138,8 @@ public class PlayerController2D : MonoBehaviour
     [PunRPC]
     public void Release()
     {
-        ChangeColor(m_normalColor.r, m_normalColor.g, m_normalColor.b, m_normalColor.a);
+        _tagMark.SetActive(false);
+        //ChangeColor(m_normalColor.r, m_normalColor.g, m_normalColor.b, m_normalColor.a);
     }
 
     /// <summary>
@@ -142,9 +149,9 @@ public class PlayerController2D : MonoBehaviour
     /// <param name="g">green</param>
     /// <param name="b">blue</param>
     /// <param name="a">alpha</param>
-    void ChangeColor(float r, float g, float b, float a)
+    void ChangeTagMark()
     {
-        m_sprite.color = new Color(r, g, b, a);
-        m_graceTimer = 0f;  // これは Tag() に移してもよいかもしれない
+        //m_sprite.color = new Color(r, g, b, a);
+        //m_graceTimer = 0f;  // これは Tag() に移してもよいかもしれない
     }
 }
