@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    bool IsEnd = false;
+    bool IsEnd = true;
     [SerializeField]
     float m_correctSpeed =1.5f;
     [SerializeField]
     float m_powerTime = 5f;
+    PlayerController2DKasai m_player;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,20 +22,10 @@ public class ItemManager : MonoBehaviour
        
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.tag == "Player")
-        {
-            collision.GetComponent<PlayerController2D>();
-            Debug.Log("speedup");
-            Destroy(this.gameObject);
-        }
-    }
-
-    float SetCorrectionNum()
+    public float SetCorrectionNum()
     {
         StartCoroutine(SetTimer());
-        if (IsEnd)
+        if (!IsEnd)
         {
             return m_correctSpeed;
         }

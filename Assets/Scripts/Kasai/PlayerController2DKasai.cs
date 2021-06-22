@@ -16,6 +16,9 @@ public class PlayerController2DKasai : MonoBehaviour
     [SerializeField] float m_dashPower = 50f;
     /// <summary>一度ダッシュした後、次にダッシュできるまでの秒数</summary>
     [SerializeField] float m_dashPeriod = 3f;
+    /// <summary>スピード補正</summary>
+    float m_correctSpeed = 1;
+    public bool CanInput = false;
     ///// <summary>鬼の時の色</summary>
     //[SerializeField] Color m_taggedColor = Color.red;
     ///// <summary>鬼ではない時の色</summary>
@@ -50,7 +53,7 @@ public class PlayerController2DKasai : MonoBehaviour
 
         Move();
         Rotate();
-
+        Debug.Log(m_correctSpeed);
         // ダッシュの処理
         if (m_dashTimer < m_dashPeriod)
         {
@@ -89,6 +92,14 @@ public class PlayerController2DKasai : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Item")
+        {
+           m_correctSpeed = collision.GetComponent<ItemManager>().SetCorrectionNum();
+        }
+    }
+
     /// <summary>
     /// ダッシュする
     /// </summary>
@@ -117,7 +128,7 @@ public class PlayerController2DKasai : MonoBehaviour
 
         if (dir != Vector2.zero)
         {
-            m_rb.AddForce(dir * m_movePower, ForceMode2D.Force);
+            m_rb.AddForce(dir * m_movePower * m_correctSpeed, ForceMode2D.Force);
         }
     }
 
@@ -153,5 +164,14 @@ public class PlayerController2DKasai : MonoBehaviour
     {
         //m_sprite.color = new Color(r, g, b, a);
         //m_graceTimer = 0f;  // これは Tag() に移してもよいかもしれない
+    }
+
+    /// <summary>
+    /// 速度補正値を受け取る
+    /// </summary>
+    /// <param name="num">補正値</param>
+    public void RecieveCorrectNum(float num)
+    {
+        m_correctSpeed = num;
     }
 }
