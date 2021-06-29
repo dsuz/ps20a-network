@@ -78,7 +78,6 @@ public class PlayerController2D : MonoBehaviour
         if (m_powerTimer > 0)
         {
             m_correctSpeed = itemManager.SetCorrectionNum();
-            Debug.Log(itemManager.SetCorrectionNum());
             m_powerTimer -= Time.deltaTime;
         }
         else
