@@ -11,7 +11,6 @@ public class ItemManager : MonoBehaviour
     public float m_powerTime = 5f;
     [SerializeField]
     GameObject m_item = null;
-    PlayerController2DKasai m_player;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,14 +35,14 @@ public class ItemManager : MonoBehaviour
         IsEnd = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!m_item) return;
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (!m_item) return;
 
-        if (collision.CompareTag("Player"))
-        {
-            Debug.Log("Hit");
-            m_item.SetActive(false);
-        }
-    }
+    //    if (collision.CompareTag("Player"))
+    //    {
+    //        Debug.Log("Hit");
+    //        m_item.SetActive(false);
+    //    }
+    //}
 }
