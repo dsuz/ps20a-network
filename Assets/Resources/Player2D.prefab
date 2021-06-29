@@ -74,6 +74,7 @@ MonoBehaviour:
   m_movePower: 30
   m_dashPower: 50
   m_dashPeriod: 3
+  CanInput: 0
   m_gracePeriod: 1.5
   _tagMark: {fileID: 776943415217747487}
 --- !u!58 &2070144204475347736

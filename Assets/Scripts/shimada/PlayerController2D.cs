@@ -16,6 +16,9 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField] float m_dashPower = 50f;
     /// <summary>一度ダッシュした後、次にダッシュできるまでの秒数</summary>
     [SerializeField] float m_dashPeriod = 3f;
+    /// <summary>スピード補正</summary>
+    float m_correctSpeed = 1;
+    public bool CanInput = false;
     ///// <summary>鬼の時の色</summary>
     //[SerializeField] Color m_taggedColor = Color.red;
     ///// <summary>鬼ではない時の色</summary>
@@ -33,6 +36,10 @@ public class PlayerController2D : MonoBehaviour
     float m_dashTimer = 0f;
     /// <summary>猶予期間を計るためのタイマー</summary>
     float m_graceTimer = 0f;
+    /// <summary>補正期間を計るためのタイマー</summary>
+    float m_powerTimer;
+
+    ItemManager itemManager;
 
     void Start()
     {
@@ -50,7 +57,6 @@ public class PlayerController2D : MonoBehaviour
 
         Move();
         Rotate();
-
         // ダッシュの処理
         if (m_dashTimer < m_dashPeriod)
         {
@@ -67,6 +73,16 @@ public class PlayerController2D : MonoBehaviour
         if (m_graceTimer < m_gracePeriod)
         {
             m_graceTimer += Time.deltaTime;
+        }
+
+        if (m_powerTimer > 0)
+        {
+            m_correctSpeed = itemManager.SetCorrectionNum();
+            m_powerTimer -= Time.deltaTime;
+        }
+        else
+        {
+            m_correctSpeed = 1;
         }
     }
 
@@ -86,6 +102,18 @@ public class PlayerController2D : MonoBehaviour
 
             // 自分を鬼ではなくする
             m_view.RPC("Release", RpcTarget.All);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log(collision.gameObject);
+        if (collision.tag == "Item")
+        {
+            itemManager = collision.GetComponentInParent<ItemManager>();
+            m_powerTimer = itemManager.m_powerTime;
+            Debug.Log(itemManager);
+            Destroy(collision.gameObject);
         }
     }
 
@@ -117,7 +145,7 @@ public class PlayerController2D : MonoBehaviour
 
         if (dir != Vector2.zero)
         {
-            m_rb.AddForce(dir * m_movePower, ForceMode2D.Force);
+            m_rb.AddForce(dir * m_movePower * m_correctSpeed, ForceMode2D.Force);
         }
     }
 
@@ -153,5 +181,14 @@ public class PlayerController2D : MonoBehaviour
     {
         //m_sprite.color = new Color(r, g, b, a);
         //m_graceTimer = 0f;  // これは Tag() に移してもよいかもしれない
+    }
+
+    /// <summary>
+    /// 速度補正値を受け取る
+    /// </summary>
+    /// <param name="num">補正値</param>
+    public void RecieveCorrectNum(float num)
+    {
+        m_correctSpeed = num;
     }
 }
