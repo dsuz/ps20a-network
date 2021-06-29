@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class DisplayName : MonoBehaviour
 {
     /// <summary>プレイヤーゲームオブジェクト</summary>
     [SerializeField] GameObject _player = null;
+    /// <summary>インプットフィールドのオブジェクト</summary>
+    [SerializeField] GameObject _inputFieldObject;
     /// <summary>キャンバス</summary>
     [SerializeField] Canvas _inputCanvas;
     /// <summary>名前を入力させるインプットフィールド</summary>
@@ -15,10 +19,26 @@ public class DisplayName : MonoBehaviour
     [SerializeField] Text _nameText;
     /// <summary>名前設定の説明のテキスト</summary>
     [SerializeField] GameObject _desctiptionImage;
+    /// <summary>名前の入力の可否</summary>
+    bool _inputName = false;
+
+    PhotonView _view;
+
+    private void Start()
+    {
+        _view = GetComponent<PhotonView>();
+    }
 
     private void Update()
     {
         _nameText.rectTransform.position = new Vector3(_player.transform.position.x, _player.transform.position.y + 1.5f, _player.transform.position.z);
+        if (_view.IsMine)
+        {
+            if (!_inputName)
+            {
+                _inputFieldObject.SetActive(true);
+            }
+        }
     }
 
     /// <summary>
@@ -31,6 +51,7 @@ public class DisplayName : MonoBehaviour
             _nameText.text = _inputField.text;
             _inputField.enabled = false;
             _inputCanvas.enabled = false;
+            _inputName = true;
         }
         else
         {
