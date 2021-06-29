@@ -80,9 +80,6 @@ public class TagGameManager : MonoBehaviour
         m_console.text = "Game Start!";
         Invoke("ClearConsole", 1.5f);   // 1.5秒後に表示を消す
         m_isGameStarted = true; // ゲーム開始フラグを立てる
-        //TimeManager.Instance.StartTimer();
-        PhotonView view1 = this.GetComponent<PhotonView>();
-        view1.RPC("StartTimer", RpcTarget.All);
 
         // マスタークライアントにより、ランダムに鬼を決める
         if (PhotonNetwork.IsMasterClient)
