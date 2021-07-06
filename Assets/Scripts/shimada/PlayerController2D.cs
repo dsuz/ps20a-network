@@ -48,7 +48,7 @@ public class PlayerController2D : MonoBehaviour
         m_dashTimer = m_dashPeriod;
         //m_sprite = GetComponent<SpriteRenderer>();
         //_tagMark = this.transform.Find("TagMark").gameObject;
-        _tagMark.SetActive(false);
+        //_tagMark.SetActive(false);
     }
 
     void Update()

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class DisplayName : MonoBehaviour
+public class DisplayName : MonoBehaviourPunCallbacks
 {
     /// <summary>プレイヤーゲームオブジェクト</summary>
     [SerializeField] GameObject _player = null;
@@ -17,9 +17,11 @@ public class DisplayName : MonoBehaviour
     [SerializeField] InputField _inputField;
     /// <summary>表示するテキスト</summary>
     [SerializeField] Text _nameText;
+    /// <summary>名前のテキスト</summary>
+    [SerializeField] string _strName;
     /// <summary>名前設定の説明のテキスト</summary>
     [SerializeField] GameObject _desctiptionImage;
-    /// <summary>名前の入力の可否</summary>
+    /// <summary>名前の入力完了</summary>
     bool _inputName = false;
 
     PhotonView _view;
@@ -29,16 +31,19 @@ public class DisplayName : MonoBehaviour
         _view = GetComponent<PhotonView>();
     }
 
+   
+
     private void Update()
     {
-        _nameText.rectTransform.position = new Vector3(_player.transform.position.x, _player.transform.position.y + 1.5f, _player.transform.position.z);
-        if (_view.IsMine)
+        if (!_view || !_view.IsMine) return;
+
+        if (!_inputName)
         {
-            if (!_inputName)
-            {
-                _inputFieldObject.SetActive(true);
-            }
+            Debug.Log("Begin Input Name");
+            _inputFieldObject.SetActive(true);
         }
+
+        _nameText.rectTransform.position = new Vector3(_player.transform.position.x, _player.transform.position.y + 1.5f, _player.transform.position.z);
     }
 
     /// <summary>
@@ -52,6 +57,8 @@ public class DisplayName : MonoBehaviour
             _inputField.enabled = false;
             _inputCanvas.enabled = false;
             _inputName = true;
+            _strName = _nameText.text;
+            _view.RPC("SetName", RpcTarget.Others, _strName);
         }
         else
         {
@@ -71,5 +78,32 @@ public class DisplayName : MonoBehaviour
         {
             _desctiptionImage.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// 名前を同期する
+    /// </summary>
+    /// <param name="name">設定する名前</param>
+    [PunRPC]
+    void SetName(string name)
+    {
+        _strName = name;
+        RefreshNameText();
+    }
+    /// <summary>
+    /// 名前の更新
+    /// </summary>
+    void RefreshNameText()
+    {
+        _nameText.text = _strName;
+    }
+
+    /// <summary>
+    /// 他のユーザーが参加したときに呼ばれる関数
+    /// </summary>
+    /// <param name="newPlayer"></param>
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        _view.RPC("SetName", RpcTarget.Others, _strName);
     }
 }
