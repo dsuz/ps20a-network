@@ -20,6 +20,7 @@ public class TagGameManager : MonoBehaviour
     [SerializeField] int m_startPlayerCount = 1;
     [SerializeField] Button m_startButton = null;
     PhotonView[] m_view = null;
+    PhotonView m_timerView;
     PlayerController2D[] m_players;
 
     Event m_eventState;
@@ -37,6 +38,7 @@ public class TagGameManager : MonoBehaviour
 
     void Start()
     {
+        m_timerView = GetComponent<PhotonView>();
         m_console.text = "Wait for other players...";
         m_startButton.gameObject.SetActive(false);
         m_eventState = new Event();
@@ -59,9 +61,14 @@ public class TagGameManager : MonoBehaviour
                 m_view = new PhotonView[PhotonNetwork.CurrentRoom.PlayerCount];
                 //for (int i = 0; i < playerCount; i++)
                 //{
-                //    m_view[i] = m_players[i].GetComponent<PhotonView>(); 
+                //    m_view[i] = m_players[i].GetComponent<PhotonView>();
                 //}
             }
+        }
+
+        else
+        {
+            m_timerView.RPC("DisplayTime", RpcTarget.All);
         }
     }
 
@@ -77,6 +84,7 @@ public class TagGameManager : MonoBehaviour
 
         // ゲームを開始する
         m_eventState = Event.GameStart;
+        Raise();
         m_console.text = "Game Start!";
         Invoke("ClearConsole", 1.5f);   // 1.5秒後に表示を消す
         m_isGameStarted = true; // ゲーム開始フラグを立てる
