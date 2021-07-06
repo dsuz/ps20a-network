@@ -31,7 +31,8 @@ public class ReceiveEvent : MonoBehaviourPunCallbacks, IOnEventCallback
             if (e.Code == (byte)Event.GameStart)
             {
                 Debug.Log(e.CustomData.ToString());
-                TagGameManager.instance.PlayStart();
+                //TagGameManager.instance.PlayStart();
+                TimeManager.Instance.StartTimer();
             }
             else if (e.Code == (byte)Event.GameOver)
             {

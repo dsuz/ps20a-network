@@ -1,13 +1,15 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
 /// <summary>
 /// 制限時間を管理する
 /// </summary>
-public class TimeManager : MonoBehaviour
+public class TimeManager : MonoBehaviour, IPunObservable
 {
     public static TimeManager Instance { get; private set;}
     /// <summary>制限時間 </summary>
@@ -35,7 +37,7 @@ public class TimeManager : MonoBehaviour
     {
         if (IsGameStart)
         {
-            m_time += Time.deltaTime;
+            Debug.Log("GameStart!!");
             m_limitSecond -= Time.deltaTime;
             if (m_limitSecond <= 0)
             {
@@ -43,9 +45,6 @@ public class TimeManager : MonoBehaviour
                 m_limitSecond = 0;
             }
         }
-        
-        m_timeText.text = "残り時間：" + Mathf.FloorToInt(m_limitSecond).ToString();
-        
     }
 
     [PunRPC]
@@ -56,8 +55,28 @@ public class TimeManager : MonoBehaviour
     }
 
     [PunRPC]
+    public void DisplayTime()
+    {
+        m_timeText.text = "残り時間：" + Mathf.FloorToInt(m_limitSecond).ToString();
+    }
+
+    [PunRPC]
     public void StartTimer()
     {
         IsGameStart = true;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // オーナーの場合
+        if (stream.IsWriting)
+        {
+            stream.SendNext(m_limitSecond);
+        }
+        // オーナー以外の場合
+        else
+        {
+            m_limitSecond = (float)stream.ReceiveNext();
+        }
     }
 }
