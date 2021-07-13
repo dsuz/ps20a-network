@@ -95,6 +95,7 @@ public class TagGameManagerTest : MonoBehaviour
             //PlayerController2D[] players = GameObject.FindObjectsOfType<PlayerController2D>();
             PhotonView view = m_players[Random.Range(0, m_players.Length)].GetComponent<PhotonView>();
             view.RPC("Tag", RpcTarget.All);
+            Debug.Log($"SetTag! : {m_players[Random.Range(0, m_players.Length)]}");
         }
     }
 
