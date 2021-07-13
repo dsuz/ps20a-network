@@ -1577,6 +1577,11 @@ MonoBehaviour:
   m_maxPlayerCount: 4
   m_startPlayerCount: 1
   m_startButton: {fileID: 3041806725929921756}
+  m_sprites:
+  - {fileID: 21300000, guid: 125d5be502cbe3a418c97ea911b93155, type: 3}
+  - {fileID: 21300000, guid: 441204ce661f32640838942da466ce4d, type: 3}
+  - {fileID: 21300000, guid: e0eb2fcf83877bc4397b3002bf39153c, type: 3}
+  - {fileID: 21300000, guid: 278b61a9028b9194ba3d4eeadb00f4fb, type: 3}
 --- !u!114 &6013984962094419936
 MonoBehaviour:
   m_ObjectHideFlags: 0
