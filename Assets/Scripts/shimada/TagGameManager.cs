@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Photon.Pun;   // PhotonNetwork を使うため
 using Photon.Realtime;  // RaiseEventOptions/ReceiverGroup を使うため
 using ExitGames.Client.Photon;  // SendOptions を使うため
+using System.Collections.Generic;
 
 /// <summary>
 /// 鬼ごっこゲームのゲーム状態を制御するコンポーネント
@@ -14,6 +15,14 @@ public class TagGameManager : MonoBehaviour
     public static TagGameManager instance { get; private set; }
     /// <summary>画面に文字を表示するための Text</summary>
     [SerializeField] Text m_console = null;
+    /// <summary>鬼のプレイヤー名</summary>
+    [SerializeField] Text m_loser;
+    /// <summary>鬼以外のプレイヤー名</summary>
+    List<Text> m_winners;
+    /// <summary>ResultTextの位置</summary>
+    [SerializeField]RectTransform m_result;
+    /// <summary>ResultTextの間隔</summary>
+    [SerializeField] float m_resultTextSpace = 1.5f;
     /// <summary>ゲームが始まっているかを管理するフラグ</summary>
     bool m_isGameStarted = false;
     [SerializeField] int m_maxPlayerCount = 4;
@@ -23,9 +32,9 @@ public class TagGameManager : MonoBehaviour
     PhotonView m_timerView;
     PlayerController2D[] m_players;
 
-    Event m_eventState;
+    public Event m_eventState;
 
-    enum Event
+    public enum Event
     {
         GameStart,
         GameOver
@@ -41,6 +50,7 @@ public class TagGameManager : MonoBehaviour
         m_timerView = GetComponent<PhotonView>();
         m_console.text = "Wait for other players...";
         m_startButton.gameObject.SetActive(false);
+        m_winners = new List<Text>();
         m_eventState = new Event();
     }
 
@@ -75,13 +85,12 @@ public class TagGameManager : MonoBehaviour
     /// <summary>
     /// ボタンから呼ばれる
     /// </summary>
-    public void PlayStart()
+    public void PlayGame()
     {
         if (m_startButton.gameObject.activeSelf)
         {
             m_startButton.gameObject.SetActive(false);//STARTボタンを無効にする
         }
-
         // ゲームを開始する
         m_eventState = Event.GameStart;
         Raise();
@@ -95,6 +104,31 @@ public class TagGameManager : MonoBehaviour
             //PlayerController2D[] players = GameObject.FindObjectsOfType<PlayerController2D>();
             PhotonView view = m_players[Random.Range(0, m_players.Length)].GetComponent<PhotonView>();
             view.RPC("Tag", RpcTarget.All);
+        }
+    }
+
+    /// <summary>
+    /// ボタンから呼ばれる
+    /// </summary>
+    public void ShowResult()
+    {
+        // ゲームを開始する
+        m_console.text = "Show Result";
+
+        foreach (var text in m_players)
+        {
+            if (text._tagMark.activeSelf)
+            {
+                m_loser.text = text.gameObject.GetComponentInParent<DisplayName>().MyName.ToString();
+            }
+            else
+            {
+                m_winners.Add(text.gameObject.GetComponentInParent<DisplayName>().MyName);
+            }
+        }
+        for (int i = 0; i < m_winners.Count; i++)
+        {
+            m_result.position += new Vector3(0,m_resultTextSpace,0);
         }
     }
 

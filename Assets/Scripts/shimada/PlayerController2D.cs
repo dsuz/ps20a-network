@@ -30,7 +30,7 @@ public class PlayerController2D : MonoBehaviour
     PhotonView m_view = null;
     //SpriteRenderer m_sprite = null;
 
-    [SerializeField] GameObject _tagMark = null;
+    [SerializeField] public GameObject _tagMark = null;
 
     /// <summary>ダッシュの間隔を計るためのタイマー</summary>
     float m_dashTimer = 0f;

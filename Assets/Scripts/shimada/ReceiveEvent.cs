@@ -36,7 +36,8 @@ public class ReceiveEvent : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else if (e.Code == (byte)Event.GameOver)
             {
-
+                Debug.Log(e.CustomData.ToString());
+                TagGameManager.instance.ShowResult();
             }
         }
     }
