@@ -37,7 +37,7 @@ public class DisplayName : MonoBehaviourPunCallbacks
     {
         if (!_view || !_view.IsMine) return;
 
-        if (!_inputName)
+        if (!_inputName && !_inputFieldObject.activeSelf)
         {
             Debug.Log("Begin Input Name");
             _inputFieldObject.SetActive(true);

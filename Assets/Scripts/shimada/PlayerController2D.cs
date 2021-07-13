@@ -157,7 +157,6 @@ public class PlayerController2D : MonoBehaviour
     {
         _tagMark.SetActive(true);
         m_graceTimer = 0f;
-        //ChangeColor(m_taggedColor.r, m_taggedColor.g, m_taggedColor.b, m_taggedColor.a);
     }
 
     /// <summary>
@@ -167,20 +166,6 @@ public class PlayerController2D : MonoBehaviour
     public void Release()
     {
         _tagMark.SetActive(false);
-        //ChangeColor(m_normalColor.r, m_normalColor.g, m_normalColor.b, m_normalColor.a);
-    }
-
-    /// <summary>
-    /// プレイヤーの色を変える
-    /// </summary>
-    /// <param name="r">red</param>
-    /// <param name="g">green</param>
-    /// <param name="b">blue</param>
-    /// <param name="a">alpha</param>
-    void ChangeTagMark()
-    {
-        //m_sprite.color = new Color(r, g, b, a);
-        //m_graceTimer = 0f;  // これは Tag() に移してもよいかもしれない
     }
 
     /// <summary>
