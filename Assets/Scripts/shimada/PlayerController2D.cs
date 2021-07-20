@@ -27,7 +27,7 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField] float m_gracePeriod = 1.5f;
 
     Rigidbody2D m_rb = null;
-    PhotonView m_view = null;
+    public PhotonView m_view { get; private set; }
     //SpriteRenderer m_sprite = null;
 
     [SerializeField] GameObject m_tagMark = null;
@@ -51,7 +51,8 @@ public class PlayerController2D : MonoBehaviour
         //_tagMark = this.transform.Find("TagMark").gameObject;
         //_tagMark.SetActive(false);
         if (!m_view || !m_view.IsMine) return;
-        GetComponent<SpriteRenderer>().sprite = m_sprites[m_view.ControllerActorNr];
+        object[] objects = { PhotonNetwork.LocalPlayer.ActorNumber - 1 };
+        m_view.RPC("ChangeSprits", RpcTarget.All, objects);
         Debug.Log($"ActorNum : {m_view.ControllerActorNr}");
     }
 
@@ -170,6 +171,12 @@ public class PlayerController2D : MonoBehaviour
     public void Release()
     {
         m_tagMark.SetActive(false);
+    }
+
+    [PunRPC]
+    public void ChangeSprits(int actorNumber)
+    {
+        GetComponent<SpriteRenderer>().sprite = m_sprites[actorNumber];
     }
 
     /// <summary>

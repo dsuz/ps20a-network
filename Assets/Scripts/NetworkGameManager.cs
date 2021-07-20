@@ -12,6 +12,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
     /// <summary>プレイヤーを生成する場所を示すアンカーのオブジェクト</summary>
     [SerializeField] Transform[] m_spawnPositions = default;
 
+    GameObject m_player;
+
     private void Awake()
     {
         // シーンの自動同期は無効にする（シーン切り替えがない時は意味はない）
@@ -101,7 +103,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
         Transform spawnPoint = m_spawnPositions[actorNumber - 1];
 
         // プレイヤーを生成し、他のクライアントと同期する
-        GameObject player = PhotonNetwork.Instantiate(m_playerPrefabName, spawnPoint.position, spawnPoint.rotation);
+        m_player = PhotonNetwork.Instantiate(m_playerPrefabName, spawnPoint.position, spawnPoint.rotation);
 
         /* **************************************************
          * ルームに参加している人数が最大に達したら部屋を閉じる（参加を締め切る）
@@ -196,6 +198,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks // Photon Realtime �
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log("OnPlayerEnteredRoom: " + newPlayer.NickName);
+        object[] objects = { PhotonNetwork.LocalPlayer.ActorNumber - 1 };
+        m_player.transform.Find("Player2DObj").GetComponent<PhotonView>().RPC("ChangeSprits", RpcTarget.All, objects);
     }
 
     /// <summary>自分のいる部屋から他のプレイヤーが退室した時</summary>

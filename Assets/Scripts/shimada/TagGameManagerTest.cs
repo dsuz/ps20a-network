@@ -58,10 +58,10 @@ public class TagGameManagerTest : MonoBehaviour
             {
                 m_players = GameObject.FindObjectsOfType<PlayerController2D>();
                 m_startButton.gameObject.SetActive(true);//STARTボタンを有効にする
+                
                 //m_view = new PhotonView[PhotonNetwork.CurrentRoom.PlayerCount];
             }
         }
-
         else
         {
             m_timerView.RPC("DisplayTime", RpcTarget.All);
