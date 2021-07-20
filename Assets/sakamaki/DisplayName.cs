@@ -19,7 +19,7 @@ public class DisplayName : MonoBehaviourPunCallbacks
     [SerializeField] Text _nameText;
     /// <summary>名前のテキスト</summary>
     [SerializeField] string _strName;
-    public string MyName { get { return _strName; } set { } }
+    public string MyName { get { return _strName; }}
     /// <summary>名前設定の説明のテキスト</summary>
     [SerializeField] GameObject _desctiptionImage;
     /// <summary>名前の入力完了</summary>
