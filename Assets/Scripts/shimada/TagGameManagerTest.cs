@@ -19,7 +19,7 @@ public class TagGameManagerTest : MonoBehaviour
     [SerializeField] int m_maxPlayerCount = 4;
     [SerializeField] int m_startPlayerCount = 1;
     [SerializeField] Button m_startButton = null;
-    PhotonView[] m_view = null;
+    //PhotonView[] m_view = null;
     PhotonView m_timerView;
     PlayerController2D[] m_players;
 
@@ -58,11 +58,7 @@ public class TagGameManagerTest : MonoBehaviour
             {
                 m_players = GameObject.FindObjectsOfType<PlayerController2D>();
                 m_startButton.gameObject.SetActive(true);//STARTボタンを有効にする
-                m_view = new PhotonView[PhotonNetwork.CurrentRoom.PlayerCount];
-                //for (int i = 0; i < playerCount; i++)
-                //{
-                //    m_view[i] = m_players[i].GetComponent<PhotonView>();
-                //}
+                //m_view = new PhotonView[PhotonNetwork.CurrentRoom.PlayerCount];
             }
         }
 
@@ -95,6 +91,7 @@ public class TagGameManagerTest : MonoBehaviour
             //PlayerController2D[] players = GameObject.FindObjectsOfType<PlayerController2D>();
             PhotonView view = m_players[Random.Range(0, m_players.Length)].GetComponent<PhotonView>();
             view.RPC("Tag", RpcTarget.All);
+            Debug.Log($"SetTag! : {m_players[Random.Range(0, m_players.Length)]}");
         }
     }
 
