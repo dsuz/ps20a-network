@@ -17,8 +17,10 @@ public class TagGameManager : MonoBehaviour
     [SerializeField] Text m_console = null;
     /// <summary>鬼のプレイヤー名</summary>
     [SerializeField] Text m_loser;
-    /// <summary>鬼以外のプレイヤー名</summary>
-    List<Text> m_winners;
+    /// <summary>鬼以外ののプレイヤー名</summary>
+    [SerializeField] Text m_winner;
+    /// <summary>鬼以外のプレイヤーリスト</summary>
+    List<string> m_winners;
     /// <summary>ResultTextの位置</summary>
     [SerializeField]RectTransform m_result;
     /// <summary>ResultTextの間隔</summary>
@@ -31,6 +33,7 @@ public class TagGameManager : MonoBehaviour
     PhotonView[] m_view = null;
     PhotonView m_timerView;
     PlayerController2D[] m_players;
+    bool IsFirstTime = true;
 
     public Event m_eventState;
 
@@ -50,7 +53,7 @@ public class TagGameManager : MonoBehaviour
         m_timerView = GetComponent<PhotonView>();
         m_console.text = "Wait for other players...";
         m_startButton.gameObject.SetActive(false);
-        m_winners = new List<Text>();
+        m_winners = new List<string>();
         m_eventState = new Event();
     }
 
@@ -75,11 +78,11 @@ public class TagGameManager : MonoBehaviour
                 //}
             }
         }
-
         else
         {
             m_timerView.RPC("DisplayTime", RpcTarget.All);
         }
+        m_players = GameObject.FindObjectsOfType<PlayerController2D>();
     }
 
     /// <summary>
@@ -117,19 +120,24 @@ public class TagGameManager : MonoBehaviour
 
         foreach (var text in m_players)
         {
-            if (text._tagMark.activeSelf)
+            if (text.m_tagMark.activeSelf)
             {
-                m_loser.text = text.gameObject.GetComponentInParent<DisplayName>().MyName.ToString();
+                m_loser.text = text.gameObject.GetComponentInParent<DisplayName>().MyName;
             }
             else
             {
                 m_winners.Add(text.gameObject.GetComponentInParent<DisplayName>().MyName);
             }
         }
-        for (int i = 0; i < m_winners.Count; i++)
+        if (IsFirstTime)
         {
-            m_result.position += new Vector3(0,m_resultTextSpace,0);
+            foreach (var item in m_winners)
+            {
+                m_winner.text += item + "\n";
+            }
         }
+        IsFirstTime = false;
+        
     }
 
     void ClearConsole()
@@ -162,7 +170,7 @@ public class TagGameManager : MonoBehaviour
                 break;
             case Event.GameOver:
                 // イベントを起こす
-                PhotonNetwork.RaiseEvent((byte)m_eventState, "", op, sendOptions);
+                PhotonNetwork.RaiseEvent((byte)m_eventState, "GameOver", op, sendOptions);
                 break;
             default:
                 break;

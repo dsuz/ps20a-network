@@ -17,7 +17,7 @@ public class ReceiveEvent : MonoBehaviourPunCallbacks, IOnEventCallback
     enum Event
     {
         GameStart,
-        GameOver
+        GameOver,
     }
 
     /// <summary>

@@ -40,12 +40,12 @@ public class TimeManager : MonoBehaviour, IPunObservable
     {
         if (IsGameStart)
         {
-            Debug.Log("GameStart!!");
             m_limitSecond -= Time.deltaTime;
             if (m_limitSecond <= 0)
             {
                 ShowTimeUp();
                 m_limitSecond = 0;
+                IsGameStart = false;
             }
         }
     }
