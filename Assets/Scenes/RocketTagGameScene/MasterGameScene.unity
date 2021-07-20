@@ -1457,6 +1457,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6013984962094419935}
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &3041806725929921757
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1518,10 +1529,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6013984962094419934}
   - component: {fileID: 6013984962094419933}
+  - component: {fileID: 6013984962094419935}
   - component: {fileID: 6013984962094419928}
   - component: {fileID: 6013984962094419936}
   - component: {fileID: 6013984962094419937}
-  - component: {fileID: 6013984962094419935}
   m_Layer: 0
   m_Name: TagGameManager
   m_TagString: Untagged
@@ -1570,18 +1581,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6013984962094419932}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b7d2424bc4c2d64da454b301c1b179b, type: 3}
+  m_Script: {fileID: 11500000, guid: b850512022ceed74994b9829958cc00c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_console: {fileID: 3041806725728945097}
   m_maxPlayerCount: 4
   m_startPlayerCount: 1
   m_startButton: {fileID: 3041806725929921756}
-  m_sprites:
-  - {fileID: 21300000, guid: 125d5be502cbe3a418c97ea911b93155, type: 3}
-  - {fileID: 21300000, guid: 441204ce661f32640838942da466ce4d, type: 3}
-  - {fileID: 21300000, guid: e0eb2fcf83877bc4397b3002bf39153c, type: 3}
-  - {fileID: 21300000, guid: 278b61a9028b9194ba3d4eeadb00f4fb, type: 3}
 --- !u!114 &6013984962094419936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1594,7 +1600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1e89e1b9184634e973abcf90308489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_limitSecond: 5
+  m_limitSecond: 90
   m_timeText: {fileID: 548316273}
   m_timeUpText: {fileID: 3041806725728945097}
 --- !u!114 &6013984962094419937

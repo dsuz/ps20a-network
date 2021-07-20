@@ -17,7 +17,7 @@ public class ReceiveEvent : MonoBehaviourPunCallbacks, IOnEventCallback
     enum Event
     {
         GameStart,
-        GameOver
+        GameOver,
     }
 
     /// <summary>
@@ -36,7 +36,8 @@ public class ReceiveEvent : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             else if (e.Code == (byte)Event.GameOver)
             {
-
+                Debug.Log(e.CustomData.ToString());
+                TagGameManager.instance.ShowResult();
             }
         }
     }
