@@ -20,6 +20,8 @@ public class TimeManager : MonoBehaviour, IPunObservable
     [SerializeField]Text m_timeText = null;
     /// <summary>タイムアップを表示する </summary>
     [SerializeField] Text m_timeUpText = null;
+    /// <summary>ゲーム結果を表示する </summary>
+    [SerializeField] GameObject m_resultText = null;
     bool IsGameStart = false;
 
     private void Awake()
@@ -30,6 +32,7 @@ public class TimeManager : MonoBehaviour, IPunObservable
     void Start()
     {
         m_timeUpText.gameObject.SetActive(false);
+        m_resultText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -37,12 +40,12 @@ public class TimeManager : MonoBehaviour, IPunObservable
     {
         if (IsGameStart)
         {
-            Debug.Log("GameStart!!");
             m_limitSecond -= Time.deltaTime;
             if (m_limitSecond <= 0)
             {
                 ShowTimeUp();
                 m_limitSecond = 0;
+                IsGameStart = false;
             }
         }
     }
@@ -52,6 +55,9 @@ public class TimeManager : MonoBehaviour, IPunObservable
     {
         m_timeUpText.text = "TimeUp!!";
         m_timeUpText.gameObject.SetActive(true);
+        StartCoroutine(WaitResult());
+        TagGameManager.instance.m_eventState = TagGameManager.Event.GameOver;
+        TagGameManager.instance.Raise();
     }
 
     [PunRPC]
@@ -78,5 +84,11 @@ public class TimeManager : MonoBehaviour, IPunObservable
         {
             m_limitSecond = (float)stream.ReceiveNext();
         }
+    }
+
+    IEnumerator WaitResult()
+    {
+        yield return new WaitForSeconds(2);
+        m_resultText.gameObject.SetActive(true);
     }
 }
