@@ -27,10 +27,11 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField] float m_gracePeriod = 1.5f;
 
     Rigidbody2D m_rb = null;
-    PhotonView m_view = null;
+    public PhotonView m_view { get; private set; }
     //SpriteRenderer m_sprite = null;
 
-    [SerializeField] GameObject _tagMark = null;
+    [SerializeField] GameObject m_tagMark = null;
+    [SerializeField] Sprite[] m_sprites = null;
 
     /// <summary>ダッシュの間隔を計るためのタイマー</summary>
     float m_dashTimer = 0f;
@@ -49,6 +50,10 @@ public class PlayerController2D : MonoBehaviour
         //m_sprite = GetComponent<SpriteRenderer>();
         //_tagMark = this.transform.Find("TagMark").gameObject;
         //_tagMark.SetActive(false);
+        if (!m_view || !m_view.IsMine) return;
+        object[] objects = { PhotonNetwork.LocalPlayer.ActorNumber - 1 };
+        m_view.RPC("ChangeSprits", RpcTarget.All, objects);
+        Debug.Log($"ActorNum : {m_view.ControllerActorNr}");
     }
 
     void Update()
@@ -89,7 +94,7 @@ public class PlayerController2D : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         // 自分が生成したオブジェクトが鬼であり、かつ猶予期間でなく衝突相手がプレイヤーである時
-        if (m_view && m_view.IsMine && _tagMark.activeSelf
+        if (m_view && m_view.IsMine && m_tagMark.activeSelf
             && m_graceTimer >= m_gracePeriod && collision.gameObject.CompareTag("Player"))
         {
             // 衝突相手を鬼にする
@@ -155,7 +160,7 @@ public class PlayerController2D : MonoBehaviour
     [PunRPC]
     public void Tag()
     {
-        _tagMark.SetActive(true);
+        m_tagMark.SetActive(true);
         m_graceTimer = 0f;
     }
 
@@ -165,7 +170,13 @@ public class PlayerController2D : MonoBehaviour
     [PunRPC]
     public void Release()
     {
-        _tagMark.SetActive(false);
+        m_tagMark.SetActive(false);
+    }
+
+    [PunRPC]
+    public void ChangeSprits(int actorNumber)
+    {
+        GetComponent<SpriteRenderer>().sprite = m_sprites[actorNumber];
     }
 
     /// <summary>
