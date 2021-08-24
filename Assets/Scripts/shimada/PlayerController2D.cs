@@ -56,12 +56,16 @@ public class PlayerController2D : MonoBehaviour
         Debug.Log($"ActorNum : {m_view.ControllerActorNr}");
     }
 
+    private void FixedUpdate()
+    {
+        Move();
+        Rotate();
+    }
+
     void Update()
     {
         if (!m_view || !m_view.IsMine) return;      // 自分が生成したものだけ処理する
 
-        Move();
-        Rotate();
         // ダッシュの処理
         if (m_dashTimer < m_dashPeriod)
         {
