@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 // Photon 用の名前空間を参照する
 using Photon.Pun;   // PhotonNetwork を使うため
 using Photon.Realtime;  // RaiseEventOptions/ReceiverGroup を使うため
@@ -13,6 +14,8 @@ using System.Collections.Generic;
 public class TagGameManager : MonoBehaviour
 {
     public static TagGameManager instance { get; private set; }
+    /// <summary>ロビーのシーン名</summary>
+    [SerializeField] string m_LobbySceneName = "Test";
     /// <summary>画面に文字を表示するための Text</summary>
     [SerializeField] Text m_console = null;
     /// <summary>鬼のプレイヤー名</summary>
@@ -21,8 +24,6 @@ public class TagGameManager : MonoBehaviour
     [SerializeField] Text m_winner;
     /// <summary>鬼以外のプレイヤーリスト</summary>
     List<string> m_winners;
-    /// <summary>ResultTextの位置</summary>
-    [SerializeField]RectTransform m_result;
     /// <summary>ResultTextの間隔</summary>
     [SerializeField] float m_resultTextSpace = 1.5f;
     /// <summary>ゲームが始まっているかを管理するフラグ</summary>
@@ -50,6 +51,7 @@ public class TagGameManager : MonoBehaviour
 
     void Start()
     {
+        if (!m_console || !m_startButton) return;
         m_timerView = GetComponent<PhotonView>();
         m_console.text = "Wait for other players...";
         m_startButton.gameObject.SetActive(false);
@@ -59,7 +61,7 @@ public class TagGameManager : MonoBehaviour
 
     void Update()
     {
-        if (!PhotonNetwork.InRoom) return;
+        if (!PhotonNetwork.InRoom || !m_console || !m_startButton) return;
 
         if (!m_isGameStarted)
         {
@@ -90,6 +92,7 @@ public class TagGameManager : MonoBehaviour
     /// </summary>
     public void PlayGame()
     {
+        if (!m_startButton) return;
         if (m_startButton.gameObject.activeSelf)
         {
             m_startButton.gameObject.SetActive(false);//STARTボタンを無効にする
@@ -115,6 +118,7 @@ public class TagGameManager : MonoBehaviour
     /// </summary>
     public void ShowResult()
     {
+        if (!m_console) return;
         // ゲームを開始する
         m_console.text = "Show Result";
 
@@ -122,10 +126,17 @@ public class TagGameManager : MonoBehaviour
         {
             if (text.m_tagMark.activeSelf)
             {
-                m_loser.text = text.gameObject.GetComponentInParent<DisplayName>().MyName;
+                if (m_loser)
+                {
+                    m_loser.text = text.gameObject.GetComponentInParent<DisplayName>().MyName;
+                }
             }
             else
             {
+                if (m_loser)
+                {
+                    m_loser.text = text.gameObject.GetComponentInParent<DisplayName>().MyName;
+                }
                 m_winners.Add(text.gameObject.GetComponentInParent<DisplayName>().MyName);
             }
         }
@@ -133,6 +144,7 @@ public class TagGameManager : MonoBehaviour
         {
             foreach (var item in m_winners)
             {
+                if (m_winner) return;
                 m_winner.text += item + "\n";
             }
         }
@@ -142,7 +154,23 @@ public class TagGameManager : MonoBehaviour
 
     void ClearConsole()
     {
+        if (!m_console) return;
         m_console.text = "";
+    }
+
+    public void ReturnLobby()
+    {
+        //PhotonNetwork.Disconnect();
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene(m_LobbySceneName);
+
+    }
+
+    public void ReturnSameLobby()
+    {
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
     }
 
     /// <summary>

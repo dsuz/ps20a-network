@@ -1585,9 +1585,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_console: {fileID: 3041806725728945097}
+  m_loser: {fileID: 0}
+  m_winner: {fileID: 0}
+  m_result: {fileID: 0}
+  m_resultTextSpace: 1.5
   m_maxPlayerCount: 4
   m_startPlayerCount: 1
   m_startButton: {fileID: 3041806725929921756}
+  m_eventState: 0
 --- !u!114 &6013984962094419936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1603,6 +1608,7 @@ MonoBehaviour:
   m_limitSecond: 90
   m_timeText: {fileID: 548316273}
   m_timeUpText: {fileID: 3041806725728945097}
+  m_resultText: {fileID: 0}
 --- !u!114 &6013984962094419937
 MonoBehaviour:
   m_ObjectHideFlags: 0

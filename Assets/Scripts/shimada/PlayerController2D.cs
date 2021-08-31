@@ -30,7 +30,7 @@ public class PlayerController2D : MonoBehaviour
     public PhotonView m_view { get; private set; }
     //SpriteRenderer m_sprite = null;
 
-    [SerializeField] GameObject m_tagMark = null;
+    public GameObject m_tagMark = null;
     [SerializeField] Sprite[] m_sprites = null;
 
     /// <summary>ダッシュの間隔を計るためのタイマー</summary>
@@ -56,12 +56,16 @@ public class PlayerController2D : MonoBehaviour
         Debug.Log($"ActorNum : {m_view.ControllerActorNr}");
     }
 
+    private void FixedUpdate()
+    {
+        Move();
+        Rotate();
+    }
+
     void Update()
     {
         if (!m_view || !m_view.IsMine) return;      // 自分が生成したものだけ処理する
 
-        Move();
-        Rotate();
         // ダッシュの処理
         if (m_dashTimer < m_dashPeriod)
         {
