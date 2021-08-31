@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.SceneManagement;
 
 public class CreateLobby : MonoBehaviourPunCallbacks
 {
-
+    [SerializeField] GameObject m_loadImage = null;
     /// <summary>
     /// Photonに接続する
     /// </summary>
@@ -18,7 +14,10 @@ public class CreateLobby : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.GameVersion = "1.0";    // 同じバージョンを指定したもの同士が接続できる
             PhotonNetwork.ConnectUsingSettings();
-
+            if (m_loadImage)
+            {
+                m_loadImage.SetActive(true);
+            }
         }
     }
 
