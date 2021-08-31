@@ -8,91 +8,60 @@ using UnityEngine.SceneManagement;
 
 public class CreateLobby : MonoBehaviourPunCallbacks
 {
-    /// <summary>スタートボタン</summary>
-    [SerializeField] GameObject m_startButton;
-    /// <summary>部屋設定の選択メニュー</summary>
-    [SerializeField] GameObject m_choseButtons;
-    /// <summary>部屋作成メニュー</summary>
-    [SerializeField] GameObject m_createMenu;
-    /// <summary>部屋参加メニュー</summary>
-    [SerializeField] GameObject m_joinMenu;
-
-    private State m_state = State.Title;
-
-    public enum State
-    {
-        Title,
-        Chose,
-        CreateMenu,
-        JoinMenu
-    }
-
-    private void Start()
-    {
-        Connect("1,0");
-    }
-
-    public void TransitionState(State state)
-    {
-        m_state = state;
-        switch (m_state)
-        {
-            case State.Title:
-                break;
-            case State.Chose:
-                m_startButton.SetActive(false);
-                m_choseButtons.SetActive(true);
-                break;
-            case State.CreateMenu:
-                m_choseButtons.SetActive(false);
-                m_createMenu.SetActive(true);
-                break;
-            case State.JoinMenu:
-                m_choseButtons.SetActive(false);
-                m_joinMenu.SetActive(true);
-                break;
-            default:
-                break;
-        }
-    }
 
     /// <summary>
     /// Photonに接続する
     /// </summary>
-    private void Connect(string gameVersion)
+    public void Connect()
     {
         if (PhotonNetwork.IsConnected == false)
         {
-            PhotonNetwork.GameVersion = gameVersion;    // 同じバージョンを指定したもの同士が接続できる
+            PhotonNetwork.GameVersion = "1.0";    // 同じバージョンを指定したもの同士が接続できる
             PhotonNetwork.ConnectUsingSettings();
+
+        }
+    }
+
+    /// <summary>
+    /// MasterSaeverに接続
+    /// </summary>
+    public override void OnConnectedToMaster()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            Debug.Log("MasterSaeverに接続した");
+            PhotonNetwork.JoinRandomRoom();
+        }
+    }
+
+    /// <summary>
+    /// 既存の部屋がなかった場合に、部屋を作成する
+    /// </summary>
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log("既存の部屋がなかった場合に、部屋を作成する");
+        CreateRoom();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            PhotonNetwork.LoadLevel("MasterGameScene");
         }
     }
 
     /// <summary>
     /// 部屋を作成
     /// </summary>
-    /// <param name="roomName">部屋名</param>
-    /// <param name="password">パスワード</param>
-    public void CreateRoom(string roomName, string password)
+    public void CreateRoom()
     {
         if (PhotonNetwork.IsConnected)
         {
-            string str;
             RoomOptions roomOptions = new RoomOptions();
             roomOptions.MaxPlayers = 4;
-            if (password != null)
-            {
-                str = $"{roomName}_{password}";
-                roomOptions.IsVisible = false;
-                Debug.Log("パスワードを設定した部屋を作成");
-            }
-            else
-            {
-                str = roomName;
-                roomOptions.IsVisible = true;
-                Debug.Log("公開された部屋を作成");
-            }
-            PhotonNetwork.CreateRoom(roomName, roomOptions); // ルーム名に null を指定するとランダムなルーム名を付ける
+
+            PhotonNetwork.CreateRoom(null, roomOptions); // ルーム名に null を指定するとランダムなルーム名を付ける
         }
     }
 
